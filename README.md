@@ -1,10 +1,10 @@
 # ride-pooling-MoD
 
-Code o
+Code of "A Time-invariant Network Flow Model for Ride-pooling Mobility-on-Demand" to generate an equivalent demand matrix to include ride pooling in LTI traffic flow problems
 
 ## Citing this work
 
-F. Paparella, L. Pedroso, T. Hofman, and M. Salazar, “A Time-invariant Network Flow Model for Ride-pooling Mobility-on-Demand
+F. Paparella, L. Pedroso, T. Hofman, and M. Salazar, “A Time-invariant Network Flow Model for Ride-pooling Mobility-on-Demand", Under Review
 
 ## Requirements
 Yalmip, Gurobobi
