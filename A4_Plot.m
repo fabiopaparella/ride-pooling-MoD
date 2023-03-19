@@ -13,30 +13,30 @@ set(groot,'defaulttextinterpreter','latex')
 set(groot,'defaultaxesticklabelinterpreter','latex')
 set(groot,'defaultlegendinterpreter','latex')
 %%
-subplot(2,1,1)
-hold on; grid on; box on;
-
-colors=lines;
-CM=[colors(1,:);colors(30,:);colors(180,:);colors(220,:)];%colors(256,:)];
-
-count2 =0;
-for Delay = [1 5 10 15]
-    count=0;
-    count2 = count2+1;
-Mar = ['o','+','*','v'];
-for WaitingTime=[1,5,10,15]
-    count = count+1;
-load(strcat('Results_reb/RebDelay',num2str(Delay),'WTime',num2str(WaitingTime),'.mat'),'TrackDems','objs','Improv')
-multiplicator = [0.1:0.2:2.1];
-plot(multiplicator*sum(OriginalDemand,'all'), objs(:,1)/240000','k','LineWidth',2);
-%plot(multiplicator*sum(OriginalDemand,'all'), objs(:,2),'g');
-plot(multiplicator*sum(OriginalDemand,'all'), (objs(:,2)+objs(:,3))/240000','Color',CM(count,:),'Marker',Mar(count2),'MarkerSize',8,'LineWidth',1);
-set(gca,'ticklabelinterpreter','Latex','fontsize',16,'XTickLabel',[]);
-ylabel('Objective $\times 10^{-4}$ ')
-%xlabel('Demands per Hour')
-set(gca,'ticklabelinterpreter','Latex','fontsize',16)
-    end
-end
+% subplot(2,1,1)
+% hold on; grid on; box on;
+% 
+% colors=lines;
+% CM=[colors(1,:);colors(30,:);colors(180,:);colors(220,:)];%colors(256,:)];
+% 
+% count2 =0;
+% for Delay = [1 5 10 15]
+%     count=0;
+%     count2 = count2+1;
+% Mar = ['o','+','*','v'];
+% for WaitingTime=[1,5,10,15]
+%     count = count+1;
+% load(strcat('Results_reb/RebDelay',num2str(Delay),'WTime',num2str(WaitingTime),'.mat'),'TrackDems','objs','Improv')
+% multiplicator = [0.1:0.2:2.1];
+% plot(multiplicator*sum(OriginalDemand,'all'), objs(:,1)/240000','k','LineWidth',2);
+% %plot(multiplicator*sum(OriginalDemand,'all'), objs(:,2),'g');
+% plot(multiplicator*sum(OriginalDemand,'all'), (objs(:,2)+objs(:,3))/240000','Color',CM(count,:),'Marker',Mar(count2),'MarkerSize',8,'LineWidth',1);
+% set(gca,'ticklabelinterpreter','Latex','fontsize',16,'XTickLabel',[]);
+% ylabel('Objective $\times 10^{-4}$ ')
+% %xlabel('Demands per Hour')
+% set(gca,'ticklabelinterpreter','Latex','fontsize',16)
+%     end
+% end
 %%
 colors=lines;
 CM=[colors(1,:);colors(30,:);colors(180,:);colors(220,:)];%colors(256,:)];
@@ -99,26 +99,26 @@ legend(h,'$\bar{t}=1$ min','$\bar{t}=5$ min','$\bar{t}=10$ min','$\bar{t}=15$ mi
 set(gca,'ticklabelinterpreter','Latex','fontsize',16)
 
 %%
-for Delay = [1 5 10 15]
-count=0;
-count2=count2+1;
-for WaitingTime=[1,5,10,15]
-count = count+1;
-    
-load(strcat('Results_reb\RebDelay',num2str(Delay),'WTime',num2str(WaitingTime),'.mat'),'TrackDems','objs','Improv')
-multiplicator = [0.1:0.2:2.1];
-set(gca,'ticklabelinterpreter','Latex','fontsize',16)
-plot(multiplicator*sum(OriginalDemand,'all'), 100- 100*TrackDems(:,2)./TrackDems(:,1) ,'Marker',Mar(count2),'Color',CM(count,:),'LineWidth',1);
-xlabel('Requests per Hour')
-set(gca,'ticklabelinterpreter','Latex','fontsize',16)
-ylabel('Pooled Rides [\%]')
-ylim([0 100])
-
-    end
-end
-legend(h,'No Pooling','$\bar{t}=1$ min','$\bar{t}=5$ min','$\bar{t}=10$ min','$\bar{t}=15$ min','$\bar{\delta}=1$ min','$\bar{\delta}=5$ min','$\bar{\delta}=10$ min','$\bar{\delta}=15$ min')
-set(gca,'ticklabelinterpreter','Latex','fontsize',16)
- 
+% for Delay = [1 5 10 15]
+% count=0;
+% count2=count2+1;
+% for WaitingTime=[1,5,10,15]
+% count = count+1;
+%     
+% load(strcat('Results_reb\RebDelay',num2str(Delay),'WTime',num2str(WaitingTime),'.mat'),'TrackDems','objs','Improv')
+% multiplicator = [0.1:0.2:2.1];
+% set(gca,'ticklabelinterpreter','Latex','fontsize',16)
+% plot(multiplicator*sum(OriginalDemand,'all'), 100- 100*TrackDems(:,2)./TrackDems(:,1) ,'Marker',Mar(count2),'Color',CM(count,:),'LineWidth',1);
+% xlabel('Requests per Hour')
+% set(gca,'ticklabelinterpreter','Latex','fontsize',16)
+% ylabel('Pooled Rides [\%]')
+% ylim([0 100])
+% 
+%     end
+% end
+% legend(h,'No Pooling','$\bar{t}=1$ min','$\bar{t}=5$ min','$\bar{t}=10$ min','$\bar{t}=15$ min','$\bar{\delta}=1$ min','$\bar{\delta}=5$ min','$\bar{\delta}=10$ min','$\bar{\delta}=15$ min')
+% set(gca,'ticklabelinterpreter','Latex','fontsize',16)
+%  
 
 %%
 fig=figure()
