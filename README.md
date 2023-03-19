@@ -1,6 +1,6 @@
 # ride-pooling-MoD
 
-Code of "A Time-invariant Network Flow Model for Ride-pooling Mobility-on-Demand" to generate an equivalent demand matrix to include ride pooling in LTI traffic flow problems
+Code of "A Time-invariant Network Flow Model for Two-Person Ride-pooling Mobility-on-Demand" to generate an equivalent demand matrix to include ride pooling in LTI traffic flow problems
 
 ## Citing this work
 
@@ -14,6 +14,6 @@ Yalmip, Gurobi
 Run in order:
 A1 to generate the solution of Problem 2 for each node pair in the graph;
 A2 to generate every linear combination of the solution of A1;
-A3 to generate the assignment matrix and the pooling matrix;
+A3_reb to generate the assignment matrix and the pooling matrix; (A3 computes the solution using the relaxed version of the problem)
 A4 to plot the results.
 
