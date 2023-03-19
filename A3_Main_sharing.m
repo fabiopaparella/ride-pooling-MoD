@@ -5,21 +5,12 @@ Adj = adjacency(G_road);
 Binc = incidence(G_road); 
 [N_nodes,N_edges]=size(Binc);
 
-DemandS= DemandS/24;
+DemandS= DemandS/24; %daily to hourly
 OriginalDemand= DemandS;
 TotDems = sum(DemandS,'all');
-% DemandsChosen = zeros(N_nodes);
-% DemandsChosen(1,18)=1;
-% DemandsChosen(12,20)=1;
-% %DemandsChosen(2,20)=1;
-% DemandsChosen(11,4)=1;
-% DemandsChosen(4,11)=1;
-% DemandS =  DemandS .* DemandsChosen;
-% OriginalDemand = OriginalDemand.*DemandsChosen;
-
 
 %% Layer 2
-load('solShared_Light.mat')
+load('SF/solShared_Light.mat')
 %% Best option
 bestSol={};
 NpSol={};
@@ -50,12 +41,14 @@ for ii1=2:N_nodes
         end
     end
 end
+%%
+load('SF/solShared_Light.mat')
 OldObj=DiffObj;
 %%
 for WaitingTime = [1 5 10 15]; %in min
 
 
-for Delay = [2 3]; % in min
+for Delay = [1 5 10 15]; % in min
 %%
 Improv =  [];
 objs = [];
@@ -118,14 +111,14 @@ end
 end
 %%
 
-solBase=LTIFM(mult*OriginalDemand);
-solNP = LTIFM(DemandS);
-solRP = LTIFM(Demands_rp);
+solBase=LTIFM_reb(mult*OriginalDemand);
+solNP = LTIFM_reb(DemandS);
+solRP = LTIFM_reb(Demands_rp);
 TrackDems = [TrackDems; sum(mult*OriginalDemand,'all'), sum(DemandS,'all'),sum(Demands_rp,'all')];
 objs = [objs; solBase.obj, solNP.obj, solRP.obj]; 
 Improv = [Improv (solNP.obj + solRP.obj)/solBase.obj];
 end
-save(strcat('Delay',num2str(Delay),'WTime',num2str(WaitingTime),'.mat'),'TrackDems','objs','Improv')
+save(strcat('Results_reb/RebDelay',num2str(Delay),'WTime',num2str(WaitingTime),'.mat'),'TrackDems','objs','Improv')
 end
 end
 %%
