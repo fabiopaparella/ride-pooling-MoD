@@ -4,7 +4,7 @@ Code of "A Time-invariant Network Flow Model for Two-Person Ride-pooling Mobilit
 
 ## Citing this work
 
-F. Paparella, L. Pedroso, T. Hofman, and M. Salazar, “A Time-invariant Network Flow Model for Ride-pooling Mobility-on-Demand", Under Review
+F. Paparella, L. Pedroso, T. Hofman, and M. Salazar, “A Time-invariant Network Flow Model for Two-Person Ride-pooling Mobility-on-Demand", Under Review
 
 ## Requirements
 Yalmip, Gurobi
