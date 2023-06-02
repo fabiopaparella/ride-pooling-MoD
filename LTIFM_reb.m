@@ -1,12 +1,12 @@
-function [sol] = LTIFM(Demands)
-load 'SF/Graphs.mat';
+function [sol] = LTIFM_reb(Demands)
+load 'NYC/Graphs.mat';
 Adj = adjacency(G_road);
 Binc = incidence(G_road); 
 [N_nodes,N_edges]=size(Binc);
 
 for ii=1:N_nodes
     if Demands(ii,ii) >= 0
-    Demands(ii,ii) = -sum(Demands(:,ii));
+    Demands(ii,ii) = -sum(Demands(:,ii)) - Demands(ii,ii);
     end
 end
 
@@ -20,10 +20,10 @@ b=reshape(Demands,[],1);
 Obj = FFT*x + FreeFlowTime*x_r;
 Cons = [];
 Cons1 = [ B_kron*x == b ];
-Cons2 = [ x >=  0  
-          x <= 10000 ];
-Cons3 = [ x_r >= 0 
-          x_r <= 10000];
+Cons2 = [ x >=  0  ];
+          %x <= 10000 ];
+Cons3 = [ x_r >= 0 ];
+          %x_r <= 10000];
       
 Cons4 = [ Binc * ( (sum ( reshape(x,N_edges,[]) ,2) + x_r))  == 0   ];
 
