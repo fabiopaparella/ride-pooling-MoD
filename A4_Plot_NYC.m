@@ -4,8 +4,9 @@ set(gca,'ticklabelinterpreter','Latex','fontsize',16)
 set(groot,'defaulttextinterpreter','latex')
 set(groot,'defaultaxesticklabelinterpreter','latex')
 set(groot,'defaultlegendinterpreter','latex')
-vec = [1 2 5 10 15]; 
+vec = [1 2 5 10]; 
 Mar = ['o','+','*','v','x'];
+city='NYC20';
 %% group together
 
 for Delay =vec%[2 5]% 
@@ -16,15 +17,15 @@ for Delay =vec%[2 5]%
         TrackDems = [];
         TotG = [];
         Del = [];
-        for multiplicator = [0.005 0.01 0.03 0.05 0.1 0.2 0.4 0.8 1.6] %   0.01 1.6
-            load(strcat('NYC/Results\Delay',num2str(Delay),'WTime',num2str(WaitingTime),'Dem',num2str(multiplicator),'.mat'),'TrackDems_temp','objs_temp','Improv_temp','Cumul_delay','TotGamma')
+        for multiplicator = [0.4 0.8] %   0.01 1.6 0.005 0.01 0.03 0.05 0.1 0.2
+            load(strcat(city,'/Results\Delay',num2str(Delay),'WTime',num2str(WaitingTime),'Dem',num2str(multiplicator),'.mat'),'TrackDems_temp','objs_temp','Improv_temp','Cumul_delay','TotGamma')
             Improv = [Improv Improv_temp];
             objs = [objs; objs_temp];
             TrackDems = [TrackDems; TrackDems_temp];
             TotG = [TotG TotGamma];
             Del = [Del Cumul_delay];
         end
-        save(strcat('NYC/results3\New_Delay',num2str(Delay),'WTime',num2str(WaitingTime),'.mat'),'TrackDems','objs','Improv','TotG','Del')
+        save(strcat(city,'/Results\New_Delay',num2str(Delay),'WTime',num2str(WaitingTime),'.mat'),'TrackDems','objs','Improv','TotG','Del')
     end
 end
 
@@ -174,45 +175,46 @@ end
 %legend(h,'$\bar{t}=1$ min','$\bar{t}=2$ min','$\bar{t}=5$ min','$\bar{t}=10$ min','$\bar{t}=15$ min','$\bar{\delta}=1$ min','$\bar{\delta}=2$ min','$\bar{\delta}=5$ min','$\bar{\delta}=10$ min','$\bar{\delta}=15$ min')
 %set(gca,'ticklabelinterpreter','Latex','fontsize',16)
 %%
-% fig=figure()
-% for iii=[1 2 3 4 5 6]
-% Matt=[];
-% for Delay = vec
-%     temp = [];
-% for WaitingTime= vec
-%   
-% load(strcat('NYC\Results\Delay',num2str(Delay),'WTime',num2str(WaitingTime),'.mat'),'TrackDems','objs','Improv')
-% num=iii;
-% temp = [temp 100*(-objs(num,2)-objs(num,3) + objs(num,1))/objs(num,1)];
-% end
-% Matt = [Matt; temp];
-% end
-% Delay = vec;
-% WaitingTime= vec;
-% [XX,YY]=meshgrid(Delay,WaitingTime);
-% nexttile
-% Dems = roundn(TrackDems(iii,1),2);
-% 
-% contourf(XX,YY,Matt)
-% caxis([10,50]); 
-% title(strcat ( num2str(Dems) ,' Demands/h'),'FontSize', 22,'interpreter','latex' )
-% caxis([10,50]);
-% set(gca,'ticklabelinterpreter','Latex','fontsize',22)%,'interpreter','latex')
-% box on;
-% grid on;
-% 
-% end
-% h = axes(fig,'visible','off'); 
-% h.Title.Visible = 'on';
-% h.XLabel.Visible = 'on';
-% h.YLabel.Visible = 'on'; 
-% cc=colorbar(h,'ticklabelinterpreter','Latex','fontsize',18)
-% cc.Label.String="Improvement [\%]";
-% cc.Position= [0.925 0.11 0.025 0.82];
-% cc.Label.Interpreter = 'Latex';
-% caxis(h,[10,50]); 
-% %axis equal
-% ylabel(h,'Maximum Delay $\bar{\delta}$ [min]','FontSize', 32,'interpreter','latex')
-% xlabel(h,'Maximum Waiting Time $\bar{t}$ [min]','FontSize', 32,'interpreter','latex')
-% set(gca,'FontSize',28)
-% cc.Label.FontSize=30;
+city='NYC20'
+fig=figure()
+for iii=[1 2 ] % 7 8
+Matt=[];
+for Delay = vec
+    temp = [];
+for WaitingTime= vec
+  
+load(strcat(city,'\Results\New_Delay',num2str(Delay),'WTime',num2str(WaitingTime),'.mat'),'TrackDems','objs','Improv')
+num=iii;
+temp = [temp 100*(-objs(num,2)-objs(num,3) + objs(num,1))/objs(num,1)];
+end
+Matt = [Matt; temp];
+end
+Delay = vec;
+WaitingTime= vec;
+[XX,YY]=meshgrid(Delay,WaitingTime);
+nexttile
+Dems = roundn(TrackDems(iii,1),2);
+
+contourf(XX,YY,Matt)
+caxis([10,50]); 
+title(strcat ( num2str(Dems) ,' Demands/h'),'FontSize', 22,'interpreter','latex' )
+caxis([10,50]);
+set(gca,'ticklabelinterpreter','Latex','fontsize',22)%,'interpreter','latex')
+box on;
+grid on;
+
+end
+h = axes(fig,'visible','off'); 
+h.Title.Visible = 'on';
+h.XLabel.Visible = 'on';
+h.YLabel.Visible = 'on'; 
+cc=colorbar(h,'ticklabelinterpreter','Latex','fontsize',18)
+cc.Label.String="Improvement [\%]";
+cc.Position= [0.925 0.11 0.025 0.82];
+cc.Label.Interpreter = 'Latex';
+caxis(h,[10,50]); 
+%axis equal
+ylabel(h,'Maximum Delay $\bar{\delta}$ [min]','FontSize', 32,'interpreter','latex')
+xlabel(h,'Maximum Waiting Time $\bar{t}$ [min]','FontSize', 32,'interpreter','latex')
+set(gca,'FontSize',28)
+cc.Label.FontSize=30;

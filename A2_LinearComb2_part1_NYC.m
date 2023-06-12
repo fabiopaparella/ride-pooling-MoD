@@ -1,14 +1,14 @@
 clc
 clear all
-load 'NYC/Graphs.mat';
-load 'NYC/Demm.mat'
-load('NYC/solPart_NYC.mat');
+city = 'NYC80'
+load(strcat(city,'/Graphs.mat'));
+load(strcat(city,'/solPart_',city,'.mat'));
 Adj = adjacency(G_road);
 Binc = incidence(G_road); 
 [N_nodes,N_edges]=size(Binc);
 
 %% Layer 2
-
+mkdir(strcat(city,'/L2'))
 for jj1=1:N_nodes %18
     sol2_LC = zeros(N_nodes*N_nodes*N_nodes,11);   %NYC
     counter=1;
@@ -25,9 +25,9 @@ for jj1=1:N_nodes %18
          end
       end
    end
-sol2_LC( sol2_LC(:,1)==0,: ) = []; %filter out zero obj
-sol2_LC( sol2_LC(:,2) > 15,: ) = []; %filter out above 20 delay
-sol2_LC( sol2_LC(:,3) > 15,: ) = []; %filter out above 20 delay
+sol2_LC( sol2_LC(:,1) == 0,: ) = []; %filter out zero obj
+sol2_LC( sol2_LC(:,2) > 10,: ) = []; %filter out above 20 delay
+sol2_LC( sol2_LC(:,3) > 10,: ) = []; %filter out above 20 delay
 sol2_LC = sortrows(sol2_LC);
 %% eliminate duplicates
 % for ii= 1 : size(sol2_LC,1)
@@ -42,8 +42,7 @@ sol2_LC = sortrows(sol2_LC);
 %         
 % end
 %sol2_LC( sol2_LC(:,1)==0,: ) = [];
-
-save(strcat('NYC/L2/MatL2_',num2str(jj1),'.mat'),'sol2_LC') 
+save(strcat(city,'/L2/MatL2_',num2str(jj1),'.mat'),'sol2_LC') 
    
 end
 %%

@@ -1,19 +1,20 @@
 clc
 clear all
-load 'NYC/Graphs.mat';
-load 'NYC/Demm.mat';
+city='NYC80';
+load(strcat(city,'/Graphs.mat'));
 Adj = adjacency(G_road);
 Binc = incidence(G_road); 
 [N_nodes,N_edges]=size(Binc);
-OriginalDemand= DemandS;
+OriginalDemand= full(DemandS);
+DemandS = full(DemandS);
 TotDems = sum(DemandS,'all');
-
+mkdir(strcat(city,'/Results'))
 %% Layer 2
-load('NYC/MatL2.mat')
+load(strcat(city,'/MatL2.mat'))
 %%
-for WaitingTime = [1 2 5 10 15] %in min
-    for Delay = [1 10 15] % in min      
-        for mult= [0.01] %0.005 0.01 0.03 0.05 0.1 0.2 0.4 0.8 1.6]
+for WaitingTime = [1 2 5 10] %in min
+    for Delay = [1 2 5 10] % in min      
+        for mult= [0.4 0.8] %0.005 0.01 0.03 0.05 0.1 0.2 0.4 0.8 1.6]
             Cumul_delay = 0;
             TotGamma = 0;
             DemandS =  mult* OriginalDemand;
@@ -34,7 +35,7 @@ for WaitingTime = [1 2 5 10 15] %in min
                     TotGamma = TotGamma + gamma;
                 else
                     if sol2_LC(iii,2) < Delay && sol2_LC(iii,3) < Delay
-                        gamma = min(DemandS(ii1,jj1),DemandS(ii2,jj2))*probcomb(DemandS(ii1,jj1),DemandS(ii2,jj2),WaitingTime);
+                        gamma = min(DemandS(ii1,jj1),DemandS(ii2,jj2))*probcomb(DemandS(ii1,jj1),DemandS(ii2,jj2),WaitingTime)/2;
                         Gamma0 = zeros(N_nodes,N_nodes);
                         
                         if sol2_LC(iii,8:11) == [1 2 1 2]
@@ -62,13 +63,13 @@ for WaitingTime = [1 2 5 10 15] %in min
             end
             %%
             
-            solBase=LTIFM_reb(mult*OriginalDemand);
-            solNP = LTIFM_reb(DemandS);
-            solRP = LTIFM_reb(Demands_rp);
+            solBase=LTIFM_reb(mult*OriginalDemand,city);
+            solNP = LTIFM_reb(DemandS,city);
+            solRP = LTIFM_reb(Demands_rp,city);
             TrackDems_temp = [sum(mult*OriginalDemand,'all'), sum(DemandS,'all'),sum(Demands_rp,'all')]
             objs_temp = [solBase.obj, solNP.obj, solRP.obj];
             Improv_temp = (solNP.obj + solRP.obj)/solBase.obj;
-            save(strcat('NYC/Results/Delay',num2str(Delay),'WTime',num2str(WaitingTime),'Dem',num2str(mult),'.mat'),'TrackDems_temp','objs_temp','Improv_temp','Cumul_delay','TotGamma')
+            save(strcat(city,'/Results/Delay',num2str(Delay),'WTime',num2str(WaitingTime),'Dem',num2str(mult),'.mat'),'TrackDems_temp','objs_temp','Improv_temp','Cumul_delay','TotGamma')
             
         end
     end

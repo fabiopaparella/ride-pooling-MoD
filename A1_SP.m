@@ -2,13 +2,13 @@ clc
 clear all
 
 %% this script computes the solution of problem 1 for every OD pair. aka, the shortest path betweene every couple of nodes
-city = 'NYC'; % 'SF'
+city = 'NYC80'; % 'SF'
 load(strcat(city,'/Graphs.mat'));
 Adj = adjacency(G_road);
 Binc = incidence(G_road); 
 [N_nodes,N_edges]=size(Binc);
 DemandS=ones(N_nodes)-eye(N_nodes);
-G_road.Edges.Weight=FreeFlowTime';
+%G_road.Edges.Weight=FreeFlowTime';
 solPart{N_nodes,N_nodes}='';
 
 for ii=1:N_nodes
