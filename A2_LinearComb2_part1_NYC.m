@@ -1,6 +1,6 @@
-clc
+% clc
 clear all
-city = 'NYC80'
+city = 'NYC20';
 load(strcat(city,'/Graphs.mat'));
 load(strcat(city,'/solPart_',city,'.mat'));
 Adj = adjacency(G_road);
@@ -12,9 +12,9 @@ mkdir(strcat(city,'/L2'))
 for jj1=1:N_nodes %18
     sol2_LC = zeros(N_nodes*N_nodes*N_nodes,11);   %NYC
     counter=1;
-    jj1
+%     jj1
    for ii1=1:N_nodes%15:N_nodes %1
-       ii1
+%        ii1
       for ii2=1:N_nodes %12%
          for jj2=1:N_nodes %20  
             if ~any([ii2==jj2,ii1==jj2,ii2==jj1,ii1==jj1,DemandS(ii1,jj1)==0,DemandS(ii2,jj2)==0])

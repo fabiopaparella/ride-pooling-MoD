@@ -1,6 +1,10 @@
-clc
+% Updates leo
+% - Save x and x_r
+
+
+% clc
 clear all
-city='NYC80';
+city='NYC20';
 load(strcat(city,'/Graphs.mat'));
 Adj = adjacency(G_road);
 Binc = incidence(G_road); 
@@ -12,9 +16,9 @@ mkdir(strcat(city,'/Results'))
 %% Layer 2
 load(strcat(city,'/MatL2.mat'))
 %%
-for WaitingTime = [1 2 5 10] %in min
-    for Delay = [1 2 5 10] % in min      
-        for mult= [0.4 0.8] %0.005 0.01 0.03 0.05 0.1 0.2 0.4 0.8 1.6]
+for WaitingTime = [5]% [1 2 5 10] %in min
+    for Delay = [2] %[1 2 5 10] % in min      
+        for mult= [0.4] %[0.4 0.8] %0.005 0.01 0.03 0.05 0.1 0.2 0.4 0.8 1.6]
             Cumul_delay = 0;
             TotGamma = 0;
             DemandS =  mult* OriginalDemand;
@@ -66,11 +70,21 @@ for WaitingTime = [1 2 5 10] %in min
             solBase=LTIFM_reb(mult*OriginalDemand,city);
             solNP = LTIFM_reb(DemandS,city);
             solRP = LTIFM_reb(Demands_rp,city);
-            TrackDems_temp = [sum(mult*OriginalDemand,'all'), sum(DemandS,'all'),sum(Demands_rp,'all')]
+            TrackDems_temp = [sum(mult*OriginalDemand,'all'), sum(DemandS,'all'),sum(Demands_rp,'all')];
             objs_temp = [solBase.obj, solNP.obj, solRP.obj];
             Improv_temp = (solNP.obj + solRP.obj)/solBase.obj;
             save(strcat(city,'/Results/Delay',num2str(Delay),'WTime',num2str(WaitingTime),'Dem',num2str(mult),'.mat'),'TrackDems_temp','objs_temp','Improv_temp','Cumul_delay','TotGamma')
             
+            %% Update Loe
+            
+            Xr = solRP.xr + solNP.xr;
+            X = solRP.x + solNP.x;
+            X = reshape(X,[size(Xr,1) size(X,1)/size(Xr,1)]);
+
+            Flows = (Xr + X*ones(size(X,2),1))';
+            save(strcat(city,'/Flows.mat'),'Flows');
+            save(strcat(city,'/Results/sol.mat'),'solNP','solRP','solBase');
+          
         end
     end
 end

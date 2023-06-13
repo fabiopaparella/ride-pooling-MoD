@@ -30,7 +30,7 @@ Cons = [Cons1
         Cons3
         Cons4 ];
 
-options = sdpsettings('verbose',1,'solver','gurobi', 'showprogress',1);
+options = sdpsettings('verbose',0,'solver','gurobi', 'showprogress',0);
 sol1 = optimize(Cons,Obj,options);
 sol.x=value(x);
 sol.xr =value(x_r);
