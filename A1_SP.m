@@ -2,7 +2,7 @@ clc
 clear all
 
 %% this script computes the solution of problem 1 for every OD pair. aka, the shortest path betweene every couple of nodes
-city = 'NYC80'; % 'SF'
+city = 'SF'; % 'SF'
 load(strcat(city,'/Graphs.mat'));
 Adj = adjacency(G_road);
 Binc = incidence(G_road); 

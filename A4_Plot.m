@@ -1,137 +1,96 @@
 clc
 clear all
-load 'SF\Graphs.mat';
-Adj = adjacency(G_road);
-Binc = incidence(G_road); 
-[N_nodes,N_edges]=size(Binc);
-DemandS= DemandS/24;
-OriginalDemand= DemandS;
-TotDems = sum(DemandS,'all');
-
 set(gca,'ticklabelinterpreter','Latex','fontsize',16)
 set(groot,'defaulttextinterpreter','latex')
 set(groot,'defaultaxesticklabelinterpreter','latex')
 set(groot,'defaultlegendinterpreter','latex')
-multiplicator = [0.05 0.1 0.2 0.4 0.8 1.6];
-vec = [1 2 5 10 15]; 
-Mar = ['o','+','*','v','x'];
-%%
-% subplot(2,1,1)
-% hold on; grid on; box on;
-% 
-% colors=lines;
-% CM=[colors(1,:);colors(30,:);colors(180,:);colors(220,:)];%colors(256,:)];
-% 
-% count2 =0;
-% for Delay = [5 10 15]
-%     count=0;
-%     count2 = count2+1;
-% Mar = ['o','+','*','v'];
-% for WaitingTime=[5,10,15]
-%     count = count+1;
-% load(strcat('Results/Delay',num2str(Delay),'WTime',num2str(WaitingTime),'.mat'),'TrackDems','objs','Improv')
-% multiplicator = [0.25 0.5 1 1.5 2];
-% plot(multiplicator*sum(OriginalDemand,'all'), objs(:,1)/240000','k','LineWidth',2);
-% plot(multiplicator*sum(OriginalDemand,'all'), (objs(:,2)+objs(:,3))/240000','Color',CM(count,:),'Marker',Mar(count2),'MarkerSize',8,'LineWidth',1);
-% set(gca,'ticklabelinterpreter','Latex','fontsize',16,'XTickLabel',[]);
-% ylabel('Objective $\times 10^{-4}$ ')
-% set(gca,'ticklabelinterpreter','Latex','fontsize',16)
-%     end
-% end
-%%
+vec = [5 10 15]; %[1 5 10 15]; 
+Mar = ['o','+','*','x','v']; %'o','*','x','v'
+city='SF';
+mult = [0.0078 0.0156 0.0312 0.0625 0.125 0.25 0.5 1 2]; %
 colors=lines;
-CM=[colors(1,:);colors(30,:);colors(180,:);colors(220,:);colors(256,:)];
-subplot(2,1,2)
-hold on; grid on; box on;
-count2 =0;
-for Delay = vec
-count=0;
-count2 = count2+1;
+CM=[colors(1,:);colors(180,:);colors(220,:);colors(30,:);colors(256,:);]; %
 
-
-for WaitingTime= vec
-    count = count+1;
+%% group together
+for Delay =vec%[2 5]% 
     
-load(strcat('Results\Delay',num2str(Delay),'WTime',num2str(WaitingTime),'.mat'),'TrackDems','objs','Improv')
-set(gca,'ticklabelinterpreter','Latex','fontsize',16)
-plot(multiplicator*sum(OriginalDemand,'all'), 100-Improv*100,'Color',CM(count,:),'Marker',Mar(count2),'MarkerSize',8,'LineWidth',1);
-xlabel('Requests per Hour')
-set(gca,'ticklabelinterpreter','Latex','fontsize',16)
-ylabel('Improvement [\%]')
-ylim([0 50])
+    for WaitingTime= vec %[1 2 5 10 15]%vec
+        Improv = [];
+        objs = [];
+        TrackDems = [];
+        TotG = [];
+        Del = [];
+        for multiplicator = mult %   0.01 1.6 0.005 0.01 0.03 0.05 0.1 0.2
+            A=load(strcat(city,'/Results/Ppl_2Delay',num2str(Delay),'WTime',num2str(WaitingTime),'Dem',num2str(multiplicator),'.mat'),'TrackDems_temp','Sol','Cumul_delay','TotGamma');
+            Improv = [Improv  1-(A.Sol(2).obj+A.Sol(3).obj)/A.Sol(1).obj];
+            objs = [objs; A.Sol.obj];
+            TrackDems = [TrackDems; A.TrackDems_temp];
+            TotG = [TotG; A.TotGamma(1) A.TotGamma(2) A.TotGamma(3)];
+            Del = [Del; A.Cumul_delay(1) A.Cumul_delay(2) A.Cumul_delay(3)];
+        end
+        save(strcat(city,'/Results/New_Delay',num2str(Delay),'WTime',num2str(WaitingTime),'.mat'),'TrackDems','objs','Improv','TotG','Del')
+    end
+end
 
-end
-end
 %%
 subplot(2,1,1)
 %figure()
 hold on; grid on; box on;
-%h(1)=plot(NaN, NaN);
 h(1)=plot(NaN, NaN,'Color',CM(1,:),'LineWidth',2);
 h(2)=plot(NaN, NaN,'Color',CM(2,:),'LineWidth',2);
 h(3)=plot(NaN, NaN,'Color',CM(3,:),'LineWidth',2);
-h(4)=plot(NaN, NaN,'Color',CM(4,:),'LineWidth',2);
-h(5)=plot(NaN, NaN,'Color',CM(5,:),'LineWidth',2);
-h(6)=plot(NaN, NaN,'Marker',Mar(1),'MarkerSize',8,'Color','k','Linestyle', 'none');
-h(7)=plot(NaN, NaN,'Marker',Mar(2),'MarkerSize',8,'Color','k','Linestyle', 'none');
-h(8)=plot(NaN, NaN,'Marker',Mar(3),'MarkerSize',8,'Color','k','Linestyle', 'none');
-h(9)=plot(NaN, NaN,'Marker',Mar(4),'MarkerSize',8,'Color','k','Linestyle', 'none');
-h(10)=plot(NaN, NaN,'Marker',Mar(5),'MarkerSize',8,'Color','k','Linestyle', 'none');
+h(4)=plot(NaN, NaN,'Marker',Mar(1),'MarkerSize',8,'Color','k','Linestyle', 'none');
+h(5)=plot(NaN, NaN,'Marker',Mar(2),'MarkerSize',8,'Color','k','Linestyle', 'none');
+h(6)=plot(NaN, NaN,'Marker',Mar(3),'MarkerSize',8,'Color','k','Linestyle', 'none');
 
-count2=0;
+
 for Delay = vec
-count=0;
-count2=count2+1;
 for WaitingTime= vec
-count = count+1;
     
-load(strcat('Results\Delay',num2str(Delay),'WTime',num2str(WaitingTime),'.mat'),'TrackDems','objs','Improv')
-set(gca,'ticklabelinterpreter','Latex','fontsize',16,'XTickLabel',[]);
-plot(multiplicator*sum(OriginalDemand,'all'), 100- 100*TrackDems(:,2)./TrackDems(:,1) ,'Marker',Mar(count2),'MarkerSize',8,'Color',CM(count,:),'LineWidth',1);
-%xlabel('Demands per Hour')
-set(gca,'ticklabelinterpreter','Latex','fontsize',16)
+load(strcat(city,'\Results\New_Delay',num2str(Delay),'WTime',num2str(WaitingTime),'.mat'),'TrackDems','objs','Improv')
+set(gca,'ticklabelinterpreter','Latex','fontsize',13,'XTickLabel',[], 'XScale', 'log') %'XScale', 'log',
+plot(TrackDems(:,1), 100- 100*TrackDems(:,2)./TrackDems(:,1) ,'Marker',Mar(find(vec==Delay)),'MarkerSize',8,'Color',CM(find(vec==WaitingTime),:),'LineWidth',1);
+%xlabel('')
+set(gca,'ticklabelinterpreter','Latex','fontsize',13)
 ylabel('Pooled Rides [\%]')
-ylim([0 100])
-
-    end
+ylim([40 100])
+xlim([800 107000])
 end
-legend(h,'$\bar{t}=1$ min','$\bar{t}=2$ min','$\bar{t}=5$ min','$\bar{t}=10$ min','$\bar{t}=15$ min','$\bar{\delta}=1$ min','$\bar{\delta}=2$ min','$\bar{\delta}=5$ min','$\bar{\delta}=10$ min','$\bar{\delta}=15$ min')
-set(gca,'ticklabelinterpreter','Latex','fontsize',16)
+end
+
+set(gca,'ticklabelinterpreter','Latex','fontsize',14)
+legend(h,'$\bar{t}=5$ min','$\bar{t}=10$ min','$\bar{t}=15$ min','$\bar{\delta}=5$ min','$\bar{\delta}=10$ min','$\bar{\delta}=15$ min','NumColumns',2)
 
 %%
-% figure()
-% hold on; grid on; box on;
-% count2 = 0;
-% for Delay = vec
-%     count=0;
-%     count2=count2+1;
-%     for WaitingTime = vec
-%         count = count+1;
-%         
-%         load(strcat('Results\Delay',num2str(Delay),'WTime',num2str(WaitingTime),'.mat'),'TrackDems','objs','Improv')
-%         set(gca,'ticklabelinterpreter','Latex','fontsize',16)
-%         plot(multiplicator*sum(OriginalDemand,'all'), 100- 100*TrackDems(:,2)./TrackDems(:,1) ,'Marker',Mar(count2),'Color',CM(count,:),'LineWidth',1);
-%         xlabel('Requests per Hour')
-%         set(gca,'ticklabelinterpreter','Latex','fontsize',16)
-%         ylabel('Pooled Rides [\%]')
-%         %ylim([0 100])
-%         
-%     end
-% end
-% %legend(h,'No Pooling','$\bar{t}=1$ min','$\bar{t}=5$ min','$\bar{t}=10$ min','$\bar{t}=15$ min','$\bar{\delta}=1$ min','$\bar{\delta}=5$ min','$\bar{\delta}=10$ min','$\bar{\delta}=15$ min')
-% %legend(h,'No Pooling','$\bar{t}=1$ min','$\bar{t}=2$ min','$\bar{t}=5$ min','$\bar{t}=10$ min','$\bar{t}=15$ min','$\bar{\delta}=1$ min','$\bar{\delta}=2$ min','$\bar{\delta}=5$ min','$\bar{\delta}=10$ min','$\bar{\delta}=15$ min')
-% set(gca,'ticklabelinterpreter','Latex','fontsize',16)
-%  
+subplot(2,1,2)
+hold on; grid on; box on;
+for Delay = vec
+for WaitingTime= vec
 
+load(strcat(city,'\Results\New_Delay',num2str(Delay),'WTime',num2str(WaitingTime),'.mat'))
+set(gca,'ticklabelinterpreter','Latex','fontsize',13)%,'XTickLabel',[]);
+plot(TrackDems(:,1), Del./(sum(TotG,2)) ,'Marker',Mar(find(vec==Delay)),'MarkerSize',8,'Color',CM(find(vec==WaitingTime),:),'LineWidth',1);
+%yline(Delay,'LineWidth',1.5)
+xlabel('Demands per Hour','fontsize',13)
+set(gca,'ticklabelinterpreter','Latex','fontsize',13, 'XScale', 'log','YScale', 'lin')
+set(gca, 'ytick', 0:0.5:2);
+ylabel('Average Delay [min]')
+%ylim([0 2.1])
+xlim([800 107000])%xlim([230 30050])
+end
+end
+%legend(h,'$\bar{t}=1$ min','$\bar{t}=2$ min','$\bar{t}=5$ min','$\bar{t}=10$ min','$\bar{t}=15$ min','$\bar{\delta}=1$ min','$\bar{\delta}=2$ min','$\bar{\delta}=5$ min','$\bar{\delta}=10$ min','$\bar{\delta}=15$ min')
+%set(gca,'ticklabelinterpreter','Latex','fontsize',16)
 %%
+city='SF'
 fig=figure()
-for iii=[1 2 3 4 5 6]
+for iii=[1 4 6 8] % 7 8
 Matt=[];
 for Delay = vec
     temp = [];
 for WaitingTime= vec
   
-load(strcat('Results\Delay',num2str(Delay),'WTime',num2str(WaitingTime),'.mat'),'TrackDems','objs','Improv')
+load(strcat(city,'\Results\New_Delay',num2str(Delay),'WTime',num2str(WaitingTime),'.mat'),'TrackDems','objs','Improv')
 num=iii;
 temp = [temp 100*(-objs(num,2)-objs(num,3) + objs(num,1))/objs(num,1)];
 end
@@ -141,12 +100,12 @@ Delay = vec;
 WaitingTime= vec;
 [XX,YY]=meshgrid(Delay,WaitingTime);
 nexttile
-Dems = roundn(multiplicator(iii)*TotDems,2);
+Dems = roundn(TrackDems(iii,1),2);
 
 contourf(XX,YY,Matt)
-caxis([20,50]); 
+caxis([0,50]); 
 title(strcat ( num2str(Dems) ,' Demands/h'),'FontSize', 22,'interpreter','latex' )
-caxis([20,50]);
+caxis([0,50]);
 set(gca,'ticklabelinterpreter','Latex','fontsize',22)%,'interpreter','latex')
 box on;
 grid on;
@@ -160,9 +119,10 @@ cc=colorbar(h,'ticklabelinterpreter','Latex','fontsize',18)
 cc.Label.String="Improvement [\%]";
 cc.Position= [0.925 0.11 0.025 0.82];
 cc.Label.Interpreter = 'Latex';
-caxis(h,[20,50]); 
+caxis(h,[10,50]); 
 %axis equal
-ylabel(h,'Delay [min]','FontSize', 32,'interpreter','latex')
-xlabel(h,'Waiting Time [min]','FontSize', 32,'interpreter','latex')
+ylabel(h,'Maximum Delay $\bar{\delta}$ [min]','FontSize', 32,'interpreter','latex')
+xlabel(h,'Maximum Waiting Time $\bar{t}$ [min]','FontSize', 32,'interpreter','latex')
 set(gca,'FontSize',28)
 cc.Label.FontSize=30;
+
