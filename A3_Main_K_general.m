@@ -41,11 +41,7 @@ for WaitingTime = [2] %in min 2 5 10 15
         for mult= [0.125] %0.0078 0.0156 0.0312 0.0625 0.125 0.25 0.5 1 2
             gamma = 0;
             TotGamma2 = 0;
-            TotGamma3 = 0;
-            TotGamma4 = 0;
             Cumul_delay2 = 0;
-            Cumul_delay3 = 0;
-            Cumul_delay4 = 0;
             DemandS =  mult* OriginalDemand;
             Demands_rp = zeros(N_nodes,N_nodes);
             

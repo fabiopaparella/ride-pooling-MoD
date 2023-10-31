@@ -4,10 +4,10 @@ set(gca,'ticklabelinterpreter','Latex','fontsize',16)
 set(groot,'defaulttextinterpreter','latex')
 set(groot,'defaultaxesticklabelinterpreter','latex')
 set(groot,'defaultlegendinterpreter','latex')
-vec = [5 10 15]; %[1 5 10 15]; 
+vec = [1 5 10 15]; %[1 5 10 15]; 
 Mar = ['o','+','*','x','v']; %'o','*','x','v'
 city='SF';
-mult = [0.0078 0.0156 0.0312 0.0625 0.125 0.25 0.5 1 2]; %
+mult = [0.0156 0.0312 0.0625 0.125 0.25 0.5 1 2]; %
 colors=lines;
 CM=[colors(1,:);colors(180,:);colors(220,:);colors(30,:);colors(256,:);]; %
 
@@ -84,7 +84,7 @@ end
 %%
 city='SF'
 fig=figure()
-for iii=[1 4 6 8] % 7 8
+for iii=[2 4 6 7] % 7 8
 Matt=[];
 for Delay = vec
     temp = [];
